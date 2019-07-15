@@ -18,7 +18,7 @@ lane :test do
   UI.message("pwd: #{Dir.pwd}")
   ret = git_clone(git: "xxx.git", branch: "toolbox_test", depth: 1, single_branch: true)
   UI.message(ret)
-  Dir.chdir('ZHUDID')
+  Dir.chdir('xxx')
   UI.message("pwd: #{Dir.pwd}")
 
   # ret = git_clone(git: "xxx.git", path: "/Users/xiongzenghui/Desktop/cartool", branch: "master", depth: 1, single_branch: false)
