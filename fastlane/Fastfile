@@ -1,0 +1,26 @@
+lane :test do
+  # ret = git_clone(git: "xxx.git")
+  # UI.message(ret)
+
+  # ret = git_clone(git: "xxx.git", path: "/Users/xiongzenghui/Desktop/cartool")
+  # UI.message(ret)
+
+  # ret = git_clone(git: "xxx.git", path: "/Users/xiongzenghui/Desktop/cartool", branch: "master")
+  # UI.message(ret)
+
+  # ret = git_clone(git: "xxx.git", path: "/Users/xiongzenghui/Desktop/cartool", branch: "master", depth: 1)
+  # UI.message(ret)
+
+  # ret = git_clone(git: "xxx.git", path: "/Users/xiongzenghui/Desktop/cartool", branch: "master", depth: 1, single_branch: true)
+  # UI.message(ret)
+
+  Dir.chdir('../')
+  UI.message("pwd: #{Dir.pwd}")
+  ret = git_clone(git: "xxx.git", branch: "toolbox_test", depth: 1, single_branch: true)
+  UI.message(ret)
+  Dir.chdir('ZHUDID')
+  UI.message("pwd: #{Dir.pwd}")
+
+  # ret = git_clone(git: "xxx.git", path: "/Users/xiongzenghui/Desktop/cartool", branch: "master", depth: 1, single_branch: false)
+  # UI.message(ret)
+end
