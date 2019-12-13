@@ -21,20 +21,65 @@ a wrapper for git clone command
 Check out the [example `Fastfile`](fastlane/Fastfile) to see how to use this plugin. Try it by cloning the repo, running `fastlane install_plugins` and `bundle exec fastlane test`.
 
 ```ruby
-ret = git_clone(git: "git@gitee.com:garywade/cartool.git")
-UI.message(ret)
+git = 'git@xx.com:xx/xxx.git'
 
-ret = git_clone(git: "git@gitee.com:garywade/cartool.git", path: "/Users/xiongzenghui/Desktop/cartool")
-UI.message(ret)
+# ok
+ret = git_clone(git: git, path: '/Users/xiongzenghui/Desktop/test')
+pp ret
 
-ret = git_clone(git: "git@gitee.com:garywade/cartool.git", path: "/Users/xiongzenghui/Desktop/cartool", branch: "master")
-UI.message(ret)
+# ok
+ret = git_clone(
+  git: git,
+  path: '/Users/xiongzenghui/Desktop/test',
+  branch: 'test'
+)
+pp ret
 
-ret = git_clone(git: "git@gitee.com:garywade/cartool.git", path: "/Users/xiongzenghui/Desktop/cartool", branch: "master", depth: 1)
-UI.message(ret)
+# ok
+ret = git_clone(
+  git: git,
+  path: '/Users/xiongzenghui/Desktop/test',
+  tag: '1.0.0'
+)
+pp ret
 
-ret = git_clone(git: "git@gitee.com:garywade/cartool.git", path: "/Users/xiongzenghui/Desktop/cartool", branch: "master", depth: 1, single_branch: true)
-UI.message(ret)
+# ok
+ret = git_clone(
+  git: git,
+  path: '/Users/xiongzenghui/Desktop/test',
+  branch: 'test',
+  depth: 1,
+  single_branch: true
+)
+pp ret
+
+# ok
+ret = git_clone(
+  git: git,
+  path: '/Users/xiongzenghui/Desktop/test',
+  commit: '2a0eaa52d76a09dca8d12d484f73b3b4debea033'
+)
+pp ret
+
+# ok
+ret = git_clone(
+  git: git,
+  path: '/Users/xiongzenghui/Desktop/test',
+  commit: '2a0eaa52d76a09dca8d12d484f73b3b4debea033',
+  # branch: 'test' # => error
+  # tag: '1.0.0' # => error
+  # depth: 1 # => error
+  # single_branch: true # => error
+)
+pp ret
+
+# ok
+ret = git_clone(
+  git: git,
+  path: '/Users/xiongzenghui/Desktop/test',
+  update: true
+)
+pp ret
 ```
 
 ## Run tests for this plugin

@@ -1,26 +1,71 @@
+require 'pp'
+
+lane :hello do
+  if sh('ls -l; ls -a') { |s| s.success? }
+    UI.success "1" * 10
+  else
+    UI.error "2" * 10
+  end
+end
+
 lane :test do
-  # ret = git_clone(git: "xxx.git")
-  # UI.message(ret)
+  git = 'git@xx.com:xx/xxx.git'
 
-  # ret = git_clone(git: "xxx.git", path: "/Users/xiongzenghui/Desktop/cartool")
-  # UI.message(ret)
+  # ok
+  ret = git_clone(git: git, path: '/Users/xiongzenghui/Desktop/test')
+  pp ret
 
-  # ret = git_clone(git: "xxx.git", path: "/Users/xiongzenghui/Desktop/cartool", branch: "master")
-  # UI.message(ret)
+  # ok
+  ret = git_clone(
+    git: git,
+    path: '/Users/xiongzenghui/Desktop/test',
+    branch: 'test'
+  )
+  pp ret
 
-  # ret = git_clone(git: "xxx.git", path: "/Users/xiongzenghui/Desktop/cartool", branch: "master", depth: 1)
-  # UI.message(ret)
+  # ok
+  ret = git_clone(
+    git: git,
+    path: '/Users/xiongzenghui/Desktop/test',
+    tag: '1.0.0'
+  )
+  pp ret
 
-  # ret = git_clone(git: "xxx.git", path: "/Users/xiongzenghui/Desktop/cartool", branch: "master", depth: 1, single_branch: true)
-  # UI.message(ret)
+  # ok
+  ret = git_clone(
+    git: git,
+    path: '/Users/xiongzenghui/Desktop/test',
+    branch: 'test',
+    depth: 1,
+    single_branch: true
+  )
+  pp ret
 
-  Dir.chdir('../')
-  UI.message("pwd: #{Dir.pwd}")
-  ret = git_clone(git: "xxx.git", branch: "toolbox_test", depth: 1, single_branch: true)
-  UI.message(ret)
-  Dir.chdir('xxx')
-  UI.message("pwd: #{Dir.pwd}")
+  # ok
+  ret = git_clone(
+    git: git,
+    path: '/Users/xiongzenghui/Desktop/test',
+    commit: '2a0eaa52d76a09dca8d12d484f73b3b4debea033'
+  )
+  pp ret
 
-  # ret = git_clone(git: "xxx.git", path: "/Users/xiongzenghui/Desktop/cartool", branch: "master", depth: 1, single_branch: false)
-  # UI.message(ret)
+  # ok
+  ret = git_clone(
+    git: git,
+    path: '/Users/xiongzenghui/Desktop/test',
+    commit: '2a0eaa52d76a09dca8d12d484f73b3b4debea033',
+    # branch: 'test' # => error
+    # tag: '1.0.0' # => error
+    # depth: 1 # => error
+    # single_branch: true # => error
+  )
+  pp ret
+
+  # ok
+  ret = git_clone(
+    git: git,
+    path: '/Users/xiongzenghui/Desktop/test',
+    update: true
+  )
+  pp ret
 end

@@ -5,35 +5,89 @@ module Fastlane
   module Actions
     class GitCloneAction < Action
       def self.run(params)
-        git = params[:git]
-        clone_path = params[:path]
-        git_repo_name = File.basename(git, '.git')
+        require 'fileutils'
 
-        rm_cmd = if clone_path
-          "rm -rf #{clone_path}"
+        git     = params[:git]
+        path    = params[:path]
+        update  = params[:update] || false
+
+        rm_rf_repo(path) unless update
+
+        if File.exist?(path)
+          # update
+          update(params)
         else
-          "rm -rf #{git_repo_name}"
+          # clone
+          clone(params)
         end
-        system(rm_cmd)
-
-        clone_cmd = "git clone #{git} "
-        clone_cmd << "-b #{params[:branch]} " if params[:branch]
-        clone_cmd << "--depth=#{params[:depth]} " if params[:depth]
-        clone_cmd << "--single-branch " if params[:single_branch]
-        clone_cmd << clone_path if clone_path
-        ret = system(clone_cmd)
-        if ret
-          UI.success "Successfully finished git clone"
-        else
-          UI.error "Failed finished git clone"
-        end
-
-        ret
       end
 
-      #####################################################
-      # @!group Documentation
-      #####################################################
+      def self.rm_rf_repo(path)
+        UI.message "❗️[git_clone] rm -rf #{path}"
+        FileUtils.rm_rf(path)
+      end
+
+      def self.clone(params)
+        UI.message "❗️[git_clone] clone ..."
+
+        git           = params[:git]
+        path          = params[:path]
+        branch        = params[:branch]
+        commit        = params[:commit]
+        tag           = params[:tag]
+        depth         = params[:depth] || 1
+        single_branch = params[:single_branch] || false
+
+        cmd = if commit
+          [
+            "git clone #{git} #{path}",
+            "cd #{path}",
+            "git checkout #{commit}"
+          ].join(';')
+        else
+          [
+            "git clone #{git} #{path}",
+            ("-b #{branch} " if branch),
+            ("-b #{tag} " if tag),
+            ("--depth=#{depth} " if depth),
+            ("--single-branch " if single_branch)
+          ].compact.join(' ')
+        end
+
+        if sh(cmd) { |s| s.success? }
+          UI.success "✅ clone #{git} to #{path}"
+          true
+        else
+          UI.error "❌ clone #{git}"
+          false
+        end
+      end
+
+      def self.update(params)
+        UI.message "❗️[git_clone] update ..."
+
+        git           = params[:git]
+        path          = params[:path]
+        branch        = params[:branch]
+        origin        = params[:origin] || true
+        upstream      = params[:upstream] || false
+
+        cmd = [
+          "cd #{path}",
+          "git reset --hard HEAD",
+          "git checkout #{branch}",
+          ("git pull origin #{branch}" if origin),
+          ("git pull upstream #{branch}" if upstream)
+        ].compact.join(';')
+
+        if sh(cmd) { |s| s.success? }
+          UI.success "✅ update #{git} to #{path}"
+          true
+        else
+          UI.error "❌ update #{git}"
+          false
+        end
+      end
 
       def self.description
         "this is a wrapper for git clone command"
@@ -47,7 +101,6 @@ module Fastlane
         [
           FastlaneCore::ConfigItem.new(
             key: :git,
-            env_name: "FL_GIT_CLONE_GIT",
             description: "where from clone",
             verify_block: proc do |value|
               UI.user_error!("No git given, pass using `git: 'git'`") unless (value and not value.empty?)
@@ -55,13 +108,37 @@ module Fastlane
           ),
           FastlaneCore::ConfigItem.new(
             key: :path,
-            env_name: "FL_GIT_CLONE_PATH",
             description: "where clone to dir",
-            optional: true
+            verify_block: proc do |value|
+              UI.user_error!("No path given, pass using `path: 'path'`") unless (value and not value.empty?)
+            end
+          ),
+          FastlaneCore::ConfigItem.new(
+            key: :update,
+            description: "update when git repo exist ?",
+            optional: true,
+            default_value: false,
+            is_string: false,
+            conflicting_options: [:branch, :tag, :commit, :depth, :single_branch]
+          ),
+          FastlaneCore::ConfigItem.new(
+            key: :origin,
+            description: "git pull origin <branch>",
+            optional: true,
+            default_value: false,
+            is_string: false,
+            conflicting_options: [:upstream]
+          ),
+          FastlaneCore::ConfigItem.new(
+            key: :upstream,
+            description: "git upstream origin <branch>",
+            optional: true,
+            default_value: false,
+            is_string: false,
+            conflicting_options: [:origin]
           ),
           FastlaneCore::ConfigItem.new(
             key: :depth,
-            env_name: "FL_GIT_CLONE_DEPTH",
             description: "--depth=1",
             is_string: false,
             type: Integer,
@@ -69,13 +146,24 @@ module Fastlane
           ),
           FastlaneCore::ConfigItem.new(
             key: :branch,
-            env_name: "FL_GIT_CLONE_BRANCH",
             description: "-b master",
-            optional: true
+            optional: true,
+            conflicting_options: [:tag, :commit]
+          ),
+          FastlaneCore::ConfigItem.new(
+            key: :tag,
+            description: "git tag",
+            optional: true,
+            conflicting_options: [:branch, :commit]
+          ),
+          FastlaneCore::ConfigItem.new(
+            key: :commit,
+            description: "git checkout commit",
+            optional: true,
+            conflicting_options: [:branch, :tag, :depth, :single_branch]
           ),
           FastlaneCore::ConfigItem.new(
             key: :single_branch,
-            env_name: "FL_GIT_CLONE_SINGLE_BRANCH",
             description: "--single-branch",
             optional: true,
             default_value: false,
@@ -102,21 +190,21 @@ module Fastlane
             git: "git@xxx.com:user/app.git"
           )',
           'git_clone(
-            git: "git@xxx.com:user/app.git", 
-            path: "/Users/xiongzenghui/Desktop/cartool", 
+            git: "git@xxx.com:user/app.git",
+            path: "/Users/xiongzenghui/Desktop/cartool",
             branch: "master"
           )',
           'git_clone(
-            git: "git@xxx.com:user/app.git", 
-            path: "/Users/xiongzenghui/Desktop/cartool", 
-            branch: "master", 
+            git: "git@xxx.com:user/app.git",
+            path: "/Users/xiongzenghui/Desktop/cartool",
+            branch: "master",
             depth: 1
           )',
           'git_clone(
-            git: "git@xxx.com:user/app.git", 
-            path: "/Users/xiongzenghui/Desktop/cartool", 
-            branch: "master", 
-            depth: 1, 
+            git: "git@xxx.com:user/app.git",
+            path: "/Users/xiongzenghui/Desktop/cartool",
+            branch: "master",
+            depth: 1,
             single_branch: true
           )'
         ]
