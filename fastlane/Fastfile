@@ -9,63 +9,73 @@ lane :hello do
 end
 
 lane :test do
-  git = 'git@xx.com:xx/xxx.git'
+  git = 'git@git.in.xxx.com:xxx/xxx.git'
 
   # ok
-  ret = git_clone(git: git, path: '/Users/xiongzenghui/Desktop/test')
-  pp ret
+  # ret = git_clone(git: git, path: '/Users/xiongzenghui/Desktop/adsasd/haha')
+  # pp ret
 
   # ok
-  ret = git_clone(
-    git: git,
-    path: '/Users/xiongzenghui/Desktop/test',
-    branch: 'test'
-  )
-  pp ret
+  # ret = git_clone(
+  #   git: git,
+  #   path: '/Users/xiongzenghui/Desktop/adsasd/haha',
+  #   branch: 'master'
+  # )
+  # pp ret
 
   # ok
-  ret = git_clone(
-    git: git,
-    path: '/Users/xiongzenghui/Desktop/test',
-    tag: '1.0.0'
-  )
-  pp ret
+  # ret = git_clone(
+  #   git: git,
+  #   path: '/Users/xiongzenghui/Desktop/adsasd/haha',
+  #   branch: 'master',
+  #   tag: '6.19.0' #=> error
+  # )
+  # pp ret
 
   # ok
-  ret = git_clone(
-    git: git,
-    path: '/Users/xiongzenghui/Desktop/test',
-    branch: 'test',
-    depth: 1,
-    single_branch: true
-  )
-  pp ret
+  # ret = git_clone(
+  #   git: git,
+  #   path: '/Users/xiongzenghui/Desktop/adsasd/haha',
+  #   tag: '6.19.0'
+  # )
+  # pp ret
 
   # ok
-  ret = git_clone(
-    git: git,
-    path: '/Users/xiongzenghui/Desktop/test',
-    commit: '2a0eaa52d76a09dca8d12d484f73b3b4debea033'
-  )
-  pp ret
+  # ret = git_clone(
+  #   git: git,
+  #   path: '/Users/xiongzenghui/Desktop/adsasd/haha',
+  #   branch: 'master',
+  #   depth: 1,
+  #   single_branch: true
+  # )
+  # pp ret
 
   # ok
-  ret = git_clone(
-    git: git,
-    path: '/Users/xiongzenghui/Desktop/test',
-    commit: '2a0eaa52d76a09dca8d12d484f73b3b4debea033',
-    # branch: 'test' # => error
-    # tag: '1.0.0' # => error
-    # depth: 1 # => error
-    # single_branch: true # => error
-  )
-  pp ret
+  # ret = git_clone(
+  #   git: git,
+  #   path: '/Users/xiongzenghui/Desktop/adsasd/haha',
+  #   commit: '3bb26661',
+  #   depth: 1, #=> error
+  #   single_branch: true #=> error
+  # )
+  # pp ret
 
   # ok
-  ret = git_clone(
-    git: git,
-    path: '/Users/xiongzenghui/Desktop/test',
-    update: true
-  )
-  pp ret
+  # ret = git_clone(
+  #   git: git,
+  #   path: '/Users/xiongzenghui/Desktop/adsasd/haha',
+  #   branch: 'master',
+  #   commit: '3bb26661',
+  #   # tag: '1.0.0', # => error
+  # )
+  # pp ret
+
+  # ok
+  # ret = git_clone(
+  #   git: git,
+  #   path: '/Users/xiongzenghui/Desktop/adsasd/haha',
+  #   branch: 'master',
+  #   update: true
+  # )
+  # pp ret
 end

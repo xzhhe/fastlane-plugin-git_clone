@@ -35,24 +35,22 @@ module Fastlane
         branch        = params[:branch]
         commit        = params[:commit]
         tag           = params[:tag]
-        depth         = params[:depth] || 1
+        depth         = params[:depth]
         single_branch = params[:single_branch] || false
 
-        cmd = if commit
-          [
-            "git clone #{git} #{path}",
-            "cd #{path}",
-            "git checkout #{commit}"
-          ].join(';')
-        else
-          [
-            "git clone #{git} #{path}",
-            ("-b #{branch} " if branch),
-            ("-b #{tag} " if tag),
-            ("--depth=#{depth} " if depth),
-            ("--single-branch " if single_branch)
-          ].compact.join(' ')
-        end
+        git_clone_cmd = [
+          "git clone #{git} #{path}",
+          ("-b #{branch}" if branch),
+          ("-b #{tag}" if tag),
+          ("--depth=#{depth}" if depth),
+          ("--single-branch" if single_branch)
+        ].compact.join(' ')
+        # UI.important(cmd)
+
+        cmd = [
+          git_clone_cmd,
+          (["cd #{path}", "git checkout #{commit}"] if commit)
+        ].compact.join(';')
 
         if sh(cmd) { |s| s.success? }
           UI.success "✅ clone #{git} to #{path}"
@@ -79,6 +77,7 @@ module Fastlane
           ("git pull origin #{branch}" if origin),
           ("git pull upstream #{branch}" if upstream)
         ].compact.join(';')
+        # UI.important(cmd)
 
         if sh(cmd) { |s| s.success? }
           UI.success "✅ update #{git} to #{path}"
@@ -119,7 +118,7 @@ module Fastlane
             optional: true,
             default_value: false,
             is_string: false,
-            conflicting_options: [:branch, :tag, :commit, :depth, :single_branch]
+            conflicting_options: [:tag, :commit, :depth, :single_branch]
           ),
           FastlaneCore::ConfigItem.new(
             key: :origin,
@@ -138,17 +137,10 @@ module Fastlane
             conflicting_options: [:origin]
           ),
           FastlaneCore::ConfigItem.new(
-            key: :depth,
-            description: "--depth=1",
-            is_string: false,
-            type: Integer,
-            optional: true
-          ),
-          FastlaneCore::ConfigItem.new(
             key: :branch,
             description: "-b master",
             optional: true,
-            conflicting_options: [:tag, :commit]
+            conflicting_options: [:tag]
           ),
           FastlaneCore::ConfigItem.new(
             key: :tag,
@@ -160,14 +152,23 @@ module Fastlane
             key: :commit,
             description: "git checkout commit",
             optional: true,
-            conflicting_options: [:branch, :tag, :depth, :single_branch]
+            conflicting_options: [:tag]
+          ),
+          FastlaneCore::ConfigItem.new(
+            key: :depth,
+            description: "--depth=1",
+            is_string: false,
+            type: Integer,
+            optional: true,
+            conflicting_options: [:commit]
           ),
           FastlaneCore::ConfigItem.new(
             key: :single_branch,
             description: "--single-branch",
             optional: true,
             default_value: false,
-            is_string: false
+            is_string: false,
+            conflicting_options: [:commit]
           )
         ]
       end
