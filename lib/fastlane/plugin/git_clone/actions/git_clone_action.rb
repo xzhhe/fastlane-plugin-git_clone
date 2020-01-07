@@ -38,17 +38,14 @@ module Fastlane
         depth         = params[:depth]
         single_branch = params[:single_branch] || false
 
-        git_clone_cmd = [
-          "git clone #{git} #{path}",
-          ("-b #{branch}" if branch),
-          ("-b #{tag}" if tag),
-          ("--depth=#{depth}" if depth),
-          ("--single-branch" if single_branch)
-        ].compact.join(' ')
-        # UI.important(cmd)
-
         cmd = [
-          git_clone_cmd,
+          [
+            "git clone #{git} #{path}",
+            ("-b #{branch}" if branch),
+            ("-b #{tag}" if tag),
+            ("--depth=#{depth}" if depth),
+            ("--single-branch" if single_branch)
+          ].compact.join(' '),
           (["cd #{path}", "git checkout #{commit}"] if commit)
         ].compact.join(';')
 
@@ -167,8 +164,7 @@ module Fastlane
             description: "--single-branch",
             optional: true,
             default_value: false,
-            is_string: false,
-            conflicting_options: [:commit]
+            is_string: false
           )
         ]
       end

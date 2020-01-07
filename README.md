@@ -56,20 +56,9 @@ pp ret
 # ok
 ret = git_clone(
   git: git,
-  path: '/Users/xiongzenghui/Desktop/test',
-  commit: '2a0eaa52d76a09dca8d12d484f73b3b4debea033'
-)
-pp ret
-
-# ok
-ret = git_clone(
-  git: git,
-  path: '/Users/xiongzenghui/Desktop/test',
-  commit: '2a0eaa52d76a09dca8d12d484f73b3b4debea033',
-  # branch: 'test' # => error
-  # tag: '1.0.0' # => error
-  # depth: 1 # => error
-  # single_branch: true # => error
+  path: '/Users/xiongzenghui/Desktop/adsasd/haha',
+  commit: '4f4ba',
+  single_branch: true
 )
 pp ret
 

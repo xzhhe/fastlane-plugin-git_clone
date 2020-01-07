@@ -9,7 +9,7 @@ lane :hello do
 end
 
 lane :test do
-  git = 'git@git.in.xxx.com:xxx/xxx.git'
+  # git = 'git@git.in.xxx.com:xxx/xxx.git'
 
   # ok
   # ret = git_clone(git: git, path: '/Users/xiongzenghui/Desktop/adsasd/haha')
@@ -54,9 +54,9 @@ lane :test do
   # ret = git_clone(
   #   git: git,
   #   path: '/Users/xiongzenghui/Desktop/adsasd/haha',
-  #   commit: '3bb26661',
-  #   depth: 1, #=> error
-  #   single_branch: true #=> error
+  #   commit: '4f4ba',
+  #   single_branch: true
+  #   # depth: 1, #=> error
   # )
   # pp ret
 
