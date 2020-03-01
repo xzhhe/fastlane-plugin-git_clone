@@ -22,14 +22,13 @@ Gem::Specification.new do |spec|
   # since this would cause a circular dependency
 
   # spec.add_dependency 'your-dependency', '~> 1.0.0'
-
-  spec.add_development_dependency('pry')
-  spec.add_development_dependency('bundler')
-  spec.add_development_dependency('rspec')
-  spec.add_development_dependency('rspec_junit_formatter')
-  spec.add_development_dependency('rake')
-  spec.add_development_dependency('rubocop', '0.49.1')
-  spec.add_development_dependency('rubocop-require_tools')
-  spec.add_development_dependency('simplecov')
-  spec.add_development_dependency('fastlane', '>= 2.126.0')
+  # spec.add_development_dependency('pry')
+  # spec.add_development_dependency('bundler')
+  # spec.add_development_dependency('rspec')
+  # spec.add_development_dependency('rspec_junit_formatter')
+  # spec.add_development_dependency('rake')
+  # spec.add_development_dependency('rubocop', '0.49.1')
+  # spec.add_development_dependency('rubocop-require_tools')
+  # spec.add_development_dependency('simplecov')
+  # spec.add_development_dependency('fastlane', '>= 2.126.0')
 end
